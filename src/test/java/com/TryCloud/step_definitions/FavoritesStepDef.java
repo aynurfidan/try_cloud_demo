@@ -3,10 +3,13 @@ package com.TryCloud.step_definitions;
 import com.TryCloud.pages.DashboardPage;
 import com.TryCloud.pages.FilesPage;
 import com.TryCloud.pages.LoginPage;
+import com.TryCloud.utilities.BrowserUtils;
 import com.TryCloud.utilities.ConfigurationReader;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 
 public class FavoritesStepDef {
 
@@ -28,17 +31,37 @@ public class FavoritesStepDef {
     @When("the user clicks action-icon  from any file on the page")
     public void the_user_clicks_action_icon_from_any_file_on_the_page() {
        filesPage.actionIcon.click();
-    }
-    @When("user choose the {string} option")
-    public void user_choose_the_option(String string) {
 
     }
-    @When("user click the {string} sub-module on the left side")
-    public void user_click_the_sub_module_on_the_left_side(String string) {
+    @And("user choose the Add to {string} option")
+    public void userChooseTheAddToOption(String option) {
+
+
+        String currentFileName = filesPage.fileName.getText();
+        System.out.println(currentFileName);
+
+        if (option.contains("favorites") && !filesPage.firstOption.getText().equals(option)) {
+            filesPage.firstOption.click();
+            BrowserUtils.highlight(filesPage.actionIcon);
+            filesPage.actionIcon.click();
+            FilesPage.setFileNameHolder(currentFileName);
+
+        } else {
+            FilesPage.setFileNameHolder(currentFileName);
+
+        }
+    }
+    @And("user click the Favorites sub-module on the left side")
+    public void userClickTheFavoritesSubModuleOnTheLeftSide() {
+        filesPage.favoritesButton.click();
 
     }
     @Then("Verify the chosen file is listed on the table")
     public void verify_the_chosen_file_is_listed_on_the_table() {
+
+        String expectedName=filesPage.favFileName.getText();
+        System.out.println(expectedName);
+        Assert.assertEquals(FilesPage.getFileNameHolder(), expectedName);
 
     }
 
